@@ -4,7 +4,9 @@ import { prefs } from './preferences';
 import { coreDifference } from './difference';
 import { geoExtent } from '../geo/extent';
 import { modeSelect } from '../modes/select';
-import { utilArrayChunk, utilArrayGroupBy, utilEntityAndDeepMemberIDs, utilRebind } from '../util';
+import { utilArrayChunk, utilArrayGroupBy } from "../util/array";
+import { utilEntityAndDeepMemberIDs } from '../util/util';
+import { utilRebind } from "../util/rebind";
 import * as Validations from '../validations/index';
 
 
@@ -85,6 +87,7 @@ export function coreValidator(context) {
     });
 
     let disabledRules = prefs('validate-disabledRules');
+    // TODO prefs shouldn't be boolean
     if (disabledRules) {
       disabledRules.split(',').forEach(k => _disabledRules[k] = true);
     }
@@ -794,7 +797,14 @@ function validationCache(which) {
     queuedEntityIDs: new Set(),
     provisionalEntityIDs: new Set(),
     issuesByIssueID: {},  // issue.id -> issue
-    issuesByEntityID: {}  // entity.id -> Set(issue.id)
+    issuesByEntityID: {},  // entity.id -> Set(issue.id)
+    cacheIssue: null,
+    uncacheIssue: null,
+    cacheIssues: null,
+    uncacheIssues: null,
+    uncacheIssuesOfType: null,
+    uncacheEntityID: null,
+    withAllRelatedEntities: null
   };
 
 
